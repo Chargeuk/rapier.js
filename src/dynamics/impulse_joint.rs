@@ -47,6 +47,28 @@ impl RawImpulseJointSet {
         self.map(handle, |j| j.data.local_frame2.translation.vector.into())
     }
 
+    /// Sets the position of the first local anchor
+    pub fn setJointAnchor1(
+        &mut self,
+        handle: FlatHandle,
+        newPos: &RawVector,
+    ) {
+        self.map_mut(handle, |j| {
+            j.data.set_local_anchor1(newPos.0.into());
+        });
+    }
+
+    /// Sets the position of the second local anchor
+    pub fn setJointAnchor2(
+        &mut self,
+        handle: FlatHandle,
+        newPos: &RawVector,
+    ) {
+        self.map_mut(handle, |j| {
+            j.data.set_local_anchor2(newPos.0.into());
+        })
+    }
+
     /// Are the limits for this joint enabled?
     pub fn jointLimitsEnabled(&self, handle: FlatHandle, axis: RawJointAxis) -> bool {
         self.map(handle, |j| {

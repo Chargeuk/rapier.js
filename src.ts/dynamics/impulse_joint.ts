@@ -149,6 +149,18 @@ export class ImpulseJoint {
     public anchor2(): Vector {
         return VectorOps.fromRaw(this.rawSet.jointAnchor2(this.handle));
     }
+
+    public setAnchor1(newPos: Vector) {
+        const rawPoint = VectorOps.intoRaw(newPos);
+        this.rawSet.setJointAnchor1(this.handle, rawPoint);
+        rawPoint.free();
+    }
+
+    public setAnchor2(newPos: Vector) {
+        const rawPoint = VectorOps.intoRaw(newPos);
+        this.rawSet.setJointAnchor2(this.handle, rawPoint);
+        rawPoint.free();
+    }
 }
 
 export class UnitImpulseJoint extends ImpulseJoint {
