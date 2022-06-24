@@ -75,6 +75,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
+name = "chargeuk_rapier3d"
+version = "0.8.1"
+dependencies = [
+ "bincode",
+ "crossbeam-channel 0.4.4",
+ "js-sys",
+ "nalgebra",
+ "palette",
+ "rapier3d",
+ "ref-cast",
+ "serde",
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "crossbeam"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -174,21 +189,6 @@ dependencies = [
  "nalgebra",
  "palette",
  "rapier2d",
- "ref-cast",
- "serde",
- "wasm-bindgen",
-]
-
-[[package]]
-name = "dimforge_rapier3d"
-version = "0.8.1"
-dependencies = [
- "bincode",
- "crossbeam-channel 0.4.4",
- "js-sys",
- "nalgebra",
- "palette",
- "rapier3d",
  "ref-cast",
  "serde",
  "wasm-bindgen",
@@ -459,7 +459,6 @@ dependencies = [
  "bitflags",
  "downcast-rs",
  "either",
- "indexmap",
  "nalgebra",
  "num-derive",
  "num-traits",
@@ -607,8 +606,6 @@ dependencies = [
 [[package]]
 name = "rapier3d"
 version = "0.13.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3de4a0087979f2c5c856bd7121b1cd295930cbbadf16b00f814f10cbf53bb02f"
 dependencies = [
  "approx",
  "arrayvec",
@@ -624,6 +621,7 @@ dependencies = [
  "rustc-hash",
  "serde",
  "simba",
+ "vec_map",
 ]
 
 [[package]]
@@ -774,6 +772,12 @@ name = "unicode-ident"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d22af068fba1eb5edcb4aea19d382b2a3deb4c8f9d475c589b6ada9e0fd493ee"
+
+[[package]]
+name = "vec_map"
+version = "0.8.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f1bddf1187be692e79c5ffeab891132dfb0f236ed36a43c7ed39f1165ee20191"
 
 [[package]]
 name = "wasi"
