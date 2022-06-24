@@ -9,7 +9,8 @@
         "build-genjs": "sh ./gen_src.sh",
         "build-js": "rollup --config rollup.config.js",
         "fix-raw-file": "sh ./fix_raw_file.sh",
-        "build": "yarn run clean && yarn run build-rust && yarn run build-genjs && yarn run build-js && yarn run fix-raw-file",
+        "build": "yarn run build-rust && yarn run build-genjs && yarn run build-js && yarn run fix-raw-file",
+        "clean-build": "yarn run clean && yarn run build",
         "clean": "npx rimraf ../rapier2d/pkg ../rapier3d/pkg pkg2d pkg3d gen2d gen3d ../rapier2d/docs ../rapier3d/docs",
         "test": "jest --detectOpenHandles",
         "all": "yarn run build"
