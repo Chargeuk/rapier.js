@@ -190,6 +190,10 @@ export class UnitImpulseJoint extends ImpulseJoint {
         return this.rawSet.jointLimitsMax(this.handle, this.rawAxis());
     }
 
+    public setJointLimits(min: number, max: number) {
+        this.rawSet.setJointLimits(this.handle, this.rawAxis(), min, max);
+    }
+
     public configureMotorModel(model: MotorModel) {
         this.rawSet.jointConfigureMotorModel(
             this.handle,

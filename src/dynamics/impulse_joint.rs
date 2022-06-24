@@ -81,9 +81,22 @@ impl RawImpulseJointSet {
         self.map(handle, |j| j.data.limits[axis as usize].min)
     }
 
+
     /// If this is a prismatic joint, returns its upper limit.
     pub fn jointLimitsMax(&self, handle: FlatHandle, axis: RawJointAxis) -> f32 {
         self.map(handle, |j| j.data.limits[axis as usize].max)
+    }
+
+     pub fn setJointLimits(
+        &mut self,
+        handle: FlatHandle,
+        axis: RawJointAxis,
+        min: f32,
+        max: f32,
+    ) {
+        self.map_mut(handle, |j| {
+            j.data.set_limits(JointAxis::from(axis).into(), [min, max]);
+        });
     }
 
     pub fn jointConfigureMotorModel(
