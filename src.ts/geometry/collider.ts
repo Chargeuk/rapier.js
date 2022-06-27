@@ -244,7 +244,18 @@ export class Collider {
      * @param groups - The collision groups used for the collider being built.
      */
     public setCollisionGroups(groups: InteractionGroups) {
-        this.colliderSet.raw.coSetCollisionGroups(this.handle, groups);
+        this.colliderSet.raw.coSetSimpleCollisionGroups(this.handle,
+            groups);
+    }
+
+    public setDetailedCollisionGroups(groups: InteractionGroups,
+        belongs_to_with_grouping: number,
+        collides_with_with_grouping: number,
+        belongs_to_grouping: number) {
+        this.colliderSet.raw.coSetCollisionGroups(this.handle,
+            groups, belongs_to_with_grouping,
+            collides_with_with_grouping,
+            belongs_to_grouping);
     }
 
     /**
@@ -256,8 +267,14 @@ export class Collider {
      *
      * @param groups - The solver groups used for the collider being built.
      */
-    public setSolverGroups(groups: InteractionGroups) {
-        this.colliderSet.raw.coSetSolverGroups(this.handle, groups);
+    public setSolverGroups(groups: InteractionGroups,
+        belongs_to_with_grouping: number,
+        collides_with_with_grouping: number,
+        belongs_to_grouping: number) {
+        this.colliderSet.raw.coSetSolverGroups(this.handle, groups,
+            belongs_to_with_grouping,
+            collides_with_with_grouping,
+            belongs_to_grouping);
     }
 
     /**
@@ -863,6 +880,10 @@ export class ColliderDesc {
     translation: Vector;
     isSensor: boolean;
     collisionGroups: InteractionGroups;
+    belongsToWithGrouping: number;
+    collidesWithWithGrouping: number;
+    belongsToGrouping: number;
+
     solverGroups: InteractionGroups;
     frictionCombineRule: CoefficientCombineRule;
     restitutionCombineRule: CoefficientCombineRule;
@@ -885,6 +906,9 @@ export class ColliderDesc {
         this.translation = VectorOps.zeros();
         this.isSensor = false;
         this.collisionGroups = 0xffff_ffff;
+        this.belongsToWithGrouping = 0xffff_ffff;
+        this.collidesWithWithGrouping = 0xffff_ffff;
+        this.belongsToGrouping = 0xffff_ffff;
         this.solverGroups = 0xffff_ffff;
         this.frictionCombineRule = CoefficientCombineRule.Average;
         this.restitutionCombineRule = CoefficientCombineRule.Average;
@@ -1437,6 +1461,21 @@ export class ColliderDesc {
      */
     public setCollisionGroups(groups: InteractionGroups): ColliderDesc {
         this.collisionGroups = groups;
+        return this;
+    }
+
+    public setBelongsToWithGrouping(belongsToWithGrouping: number): ColliderDesc {
+        this.belongsToWithGrouping = belongsToWithGrouping;
+        return this;
+    }
+
+    public setCollidesWithWithGrouping(collidesWithWithGrouping: number): ColliderDesc {
+        this.collidesWithWithGrouping = collidesWithWithGrouping;
+        return this;
+    }
+
+    public setBelongsToGrouping(belongsToGrouping: InteractionGroups): ColliderDesc {
+        this.belongsToGrouping = belongsToGrouping;
         return this;
     }
 

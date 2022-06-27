@@ -592,13 +592,18 @@ impl RawColliderSet {
         self.map_mut(handle, |co| co.set_restitution_combine_rule(rule))
     }
 
-    pub fn coSetCollisionGroups(&mut self, handle: FlatHandle, groups: u32) {
-        let groups = super::unpack_interaction_groups(groups);
+    pub fn coSetCollisionGroups(&mut self, handle: FlatHandle, groups: u32, belongs_to_with_grouping: u32, collides_with_with_grouping: u32, belongs_to_grouping: u32) {
+        let groups = super::unpack_interaction_groups(groups, belongs_to_with_grouping, collides_with_with_grouping, belongs_to_grouping);
         self.map_mut(handle, |co| co.set_collision_groups(groups))
     }
 
-    pub fn coSetSolverGroups(&mut self, handle: FlatHandle, groups: u32) {
-        let groups = super::unpack_interaction_groups(groups);
+    pub fn coSetSimpleCollisionGroups(&mut self, handle: FlatHandle, groups: u32) {
+        let groups = super::unpack_basic_interaction_groups(groups);
+        self.map_mut(handle, |co| co.set_collision_groups(groups))
+    }
+
+    pub fn coSetSolverGroups(&mut self, handle: FlatHandle, groups: u32, belongs_to_with_grouping: u32, collides_with_with_grouping: u32, belongs_to_grouping: u32) {
+        let groups = super::unpack_interaction_groups(groups, belongs_to_with_grouping, collides_with_with_grouping, belongs_to_grouping);
         self.map_mut(handle, |co| co.set_solver_groups(groups))
     }
 

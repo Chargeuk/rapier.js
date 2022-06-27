@@ -51,7 +51,7 @@ impl RawQueryPipeline {
             &ray,
             maxToi,
             solid,
-            crate::geometry::unpack_interaction_groups(groups),
+            crate::geometry::unpack_basic_interaction_groups(groups),
             filter,
         )?;
         Some(RawRayColliderToi { handle, toi })
@@ -78,7 +78,7 @@ impl RawQueryPipeline {
             &ray,
             maxToi,
             solid,
-            crate::geometry::unpack_interaction_groups(groups),
+            crate::geometry::unpack_basic_interaction_groups(groups),
             rfilter,
         )?;
         Some(RawRayColliderIntersection { handle, inter })
@@ -115,7 +115,7 @@ impl RawQueryPipeline {
             &ray,
             maxToi,
             solid,
-            crate::geometry::unpack_interaction_groups(groups),
+            crate::geometry::unpack_basic_interaction_groups(groups),
             rfilter,
             rcallback,
         );
@@ -141,7 +141,7 @@ impl RawQueryPipeline {
                 &colliders.0,
                 &pos,
                 &*shape.0,
-                crate::geometry::unpack_interaction_groups(groups),
+                crate::geometry::unpack_basic_interaction_groups(groups),
                 rfilter,
             )
             .map(|h| utils::flat_handle(h.0))
@@ -165,7 +165,7 @@ impl RawQueryPipeline {
                 &colliders.0,
                 &point.0.into(),
                 solid,
-                crate::geometry::unpack_interaction_groups(groups),
+                crate::geometry::unpack_basic_interaction_groups(groups),
                 rfilter,
             )
             .map(|(handle, proj)| RawPointColliderProjection {
@@ -191,7 +191,7 @@ impl RawQueryPipeline {
             .project_point_and_get_feature(
                 &colliders.0,
                 &point.0.into(),
-                crate::geometry::unpack_interaction_groups(groups),
+                crate::geometry::unpack_basic_interaction_groups(groups),
                 rfilter,
             )
             .map(|(handle, proj, feature)| RawPointColliderProjection {
@@ -225,7 +225,7 @@ impl RawQueryPipeline {
         self.0.intersections_with_point(
             &colliders.0,
             &point.0.into(),
-            crate::geometry::unpack_interaction_groups(groups),
+            crate::geometry::unpack_basic_interaction_groups(groups),
             rfilter,
             rcallback,
         )
@@ -255,7 +255,7 @@ impl RawQueryPipeline {
                 &shapeVel.0,
                 &*shape.0,
                 maxToi,
-                crate::geometry::unpack_interaction_groups(groups),
+                crate::geometry::unpack_basic_interaction_groups(groups),
                 rfilter,
             )
             .map(|(handle, toi)| RawShapeColliderTOI { handle, toi })
@@ -290,7 +290,7 @@ impl RawQueryPipeline {
             &colliders.0,
             &pos,
             &*shape.0,
-            crate::geometry::unpack_interaction_groups(groups),
+            crate::geometry::unpack_basic_interaction_groups(groups),
             rfilter,
             rcallback,
         )

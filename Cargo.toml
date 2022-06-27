@@ -14,7 +14,7 @@ lto = true
 opt-level = 3
 
 [patch.crates-io]
-# rapier2d = { path = "../rapier/crates/rapier2d" }
+rapier2d = { path = "../../rapier/code/crates/rapier2d" }
 # rapier3d = { path = "../rapier/crates/rapier3d" }
 #parry2d = { path = "../parry/crates/parry2d" }
 #parry3d = { path = "../parry/crates/parry3d" }
