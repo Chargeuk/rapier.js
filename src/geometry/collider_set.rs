@@ -68,7 +68,7 @@ impl RawColliderSet {
             .friction(friction)
             .restitution(restitution)
             .collision_groups(super::unpack_interaction_groups(collisionGroups, belongsToWithGrouping, collidesWithWithGrouping, belongsToGrouping))
-            .solver_groups(super::unpack_interaction_groups(solverGroups, belongsToWithGrouping, collidesWithWithGrouping, belongsToGrouping))
+            .solver_groups(super::unpack_basic_interaction_groups(solverGroups))
             .active_hooks(ActiveHooks::from_bits(activeHooks).unwrap_or(ActiveHooks::empty()))
             .active_events(ActiveEvents::from_bits(activeEvents).unwrap_or(ActiveEvents::empty()))
             .active_collision_types(

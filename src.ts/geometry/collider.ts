@@ -267,14 +267,8 @@ export class Collider {
      *
      * @param groups - The solver groups used for the collider being built.
      */
-    public setSolverGroups(groups: InteractionGroups,
-        belongs_to_with_grouping: number,
-        collides_with_with_grouping: number,
-        belongs_to_grouping: number) {
-        this.colliderSet.raw.coSetSolverGroups(this.handle, groups,
-            belongs_to_with_grouping,
-            collides_with_with_grouping,
-            belongs_to_grouping);
+    public setSolverGroups(groups: InteractionGroups) {
+        this.colliderSet.raw.coSetSimpleCollisionGroups(this.handle, groups);
     }
 
     /**
