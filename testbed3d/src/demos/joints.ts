@@ -114,21 +114,33 @@ function createRevoluteJoints(
                 o,
                 new RAPIER.Vector3(0.0, 0.0, -shift),
                 z,
+                false,
+                0.0,
+                0.0,
             ),
             RAPIER.JointData.revolute(
                 o,
                 new RAPIER.Vector3(-shift, 0.0, 0.0),
                 x,
+                false,
+                0.0,
+                0.0,
             ),
             RAPIER.JointData.revolute(
                 o,
                 new RAPIER.Vector3(0.0, 0.0, -shift),
                 z,
+                false,
+                0.0,
+                0.0,
             ),
             RAPIER.JointData.revolute(
                 o,
                 new RAPIER.Vector3(shift, 0.0, 0.0),
                 x,
+                false,
+                0.0,
+                0.0,
             ),
         ];
 

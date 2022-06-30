@@ -495,7 +495,13 @@ export class JointData {
                 break;
             // #if DIM2
             case JointType.Revolute:
-                result = RawGenericJoint.revolute(rawA1, rawA2);
+                result = RawGenericJoint.revolute(
+                    rawA1,
+                    rawA2,
+                    limitsEnabled,
+                    limitsMin,
+                    limitsMax,
+                    );
                 break;
             // #endif
             // #if DIM3
@@ -504,7 +510,14 @@ export class JointData {
                 break;
             case JointType.Revolute:
                 rawAx = VectorOps.intoRaw(this.axis);
-                result = RawGenericJoint.revolute(rawA1, rawA2, rawAx);
+                result = RawGenericJoint.revolute(
+                    rawA1,
+                    rawA2,
+                    rawAx,
+                    limitsEnabled,
+                    limitsMin,
+                    limitsMax,
+                    );
                 rawAx.free();
                 break;
             // #endif

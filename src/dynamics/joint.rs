@@ -234,13 +234,22 @@ impl RawGenericJoint {
     /// A revolute joint removes all degrees of freedom between the affected
     /// bodies except for the rotation.
     #[cfg(feature = "dim2")]
-    pub fn revolute(anchor1: &RawVector, anchor2: &RawVector) -> Option<RawGenericJoint> {
-        Some(Self(
-            RevoluteJointBuilder::new()
-                .local_anchor1(anchor1.0.into())
-                .local_anchor2(anchor2.0.into())
-                .into(),
-        ))
+    pub fn revolute(
+        anchor1: &RawVector,
+        anchor2: &RawVector,
+        limitsEnabled: bool,
+        limitsMin: f32,
+        limitsMax: f32,
+    ) -> Option<RawGenericJoint> {
+        let mut joint = RevoluteJointBuilder::new()
+            .local_anchor1(anchor1.0.into())
+            .local_anchor2(anchor2.0.into());
+
+        if limitsEnabled {
+            joint = joint.limits([limitsMin, limitsMax]);
+        }
+
+        Some(Self(joint.into()))
     }
 
     /// Create a new joint descriptor that builds Revolute joints.
@@ -252,13 +261,20 @@ impl RawGenericJoint {
         anchor1: &RawVector,
         anchor2: &RawVector,
         axis: &RawVector,
+        limitsEnabled: bool,
+        limitsMin: f32,
+        limitsMax: f32,
     ) -> Option<RawGenericJoint> {
+
         let axis = Unit::try_new(axis.0, 0.0)?;
-        Some(Self(
-            RevoluteJointBuilder::new(axis)
-                .local_anchor1(anchor1.0.into())
-                .local_anchor2(anchor2.0.into())
-                .into(),
-        ))
+        let mut joint = RevoluteJointBuilder::new(axis)
+            .local_anchor1(anchor1.0.into())
+            .local_anchor2(anchor2.0.into());
+
+        if limitsEnabled {
+            joint = joint.limits([limitsMin, limitsMax]);
+        }
+
+        Some(Self(joint.into()))
     }
 }
