@@ -509,6 +509,11 @@ export class JointData {
                 result = RawGenericJoint.spherical(rawA1, rawA2);
                 break;
             case JointType.Revolute:
+                if (!!this.limitsEnabled) {
+                    limitsEnabled = true;
+                    limitsMin = this.limits[0];
+                    limitsMax = this.limits[1];
+                }
                 rawAx = VectorOps.intoRaw(this.axis);
                 result = RawGenericJoint.revolute(
                     rawA1,
