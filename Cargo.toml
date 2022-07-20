@@ -22,7 +22,7 @@ rapier2d = { path = "../../rapier/code/crates/rapier2d" }
 #simba = { path = "../simba" }
 
 #nalgebra = { git = "https://github.com/dimforge/nalgebra", branch = "dev" }
-#rapier2d = { git = "https://github.com/dimforge/rapier", rev = "fb1bfc7" }
-#rapier3d = { git = "https://github.com/dimforge/rapier", rev = "fb1bfc7" }
+#rapier2d = { git = "https://github.com/dimforge/rapier", rev = "573affd73cf8f9d1c998f68535b5832a33c73848" }
+#rapier3d = { git = "https://github.com/dimforge/rapier", rev = "573affd73cf8f9d1c998f68535b5832a33c73848" }
 #parry2d = { git = "https://github.com/dimforge/parry" }
 #parry3d = { git = "https://github.com/dimforge/parry" }
