@@ -15,14 +15,14 @@ opt-level = 3
 
 [patch.crates-io]
 rapier2d = { path = "../../rapier/code/crates/rapier2d" }
-# rapier3d = { path = "../rapier/crates/rapier3d" }
+rapier3d = { path = "../../rapier/code/crates/rapier3d" }
 #parry2d = { path = "../parry/crates/parry2d" }
 #parry3d = { path = "../parry/crates/parry3d" }
 #nalgebra = { path = "../nalgebra" }
 #simba = { path = "../simba" }
 
 #nalgebra = { git = "https://github.com/dimforge/nalgebra", branch = "dev" }
-rapier2d = { git = "https://github.com/dimforge/rapier", rev = "68d250f0ad80bb2e5e10e43f2fd1b8824e2a1216" }
-rapier3d = { git = "https://github.com/dimforge/rapier", rev = "68d250f0ad80bb2e5e10e43f2fd1b8824e2a1216" }
+#rapier2d = { git = "https://github.com/dimforge/rapier", rev = "68d250f0ad80bb2e5e10e43f2fd1b8824e2a1216" }
+#rapier3d = { git = "https://github.com/dimforge/rapier", rev = "68d250f0ad80bb2e5e10e43f2fd1b8824e2a1216" }
 #parry2d = { git = "https://github.com/dimforge/parry" }
 #parry3d = { git = "https://github.com/dimforge/parry" }
