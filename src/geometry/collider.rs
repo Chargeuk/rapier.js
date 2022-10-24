@@ -125,6 +125,7 @@ impl RawColliderSet {
             ShapeType::TriMesh => RawShapeType::TriMesh,
             ShapeType::HeightField => RawShapeType::HeightField,
             ShapeType::Compound => RawShapeType::Compound,
+            ShapeType::HalfSpace => RawShapeType::HalfSpace,
             #[cfg(feature = "dim3")]
             ShapeType::ConvexPolyhedron => RawShapeType::ConvexPolyhedron,
             #[cfg(feature = "dim2")]
@@ -143,7 +144,15 @@ impl RawColliderSet {
             ShapeType::RoundConvexPolyhedron => RawShapeType::RoundConvexPolyhedron,
             #[cfg(feature = "dim2")]
             ShapeType::RoundConvexPolygon => RawShapeType::RoundConvexPolygon,
-            ShapeType::HalfSpace | ShapeType::Custom => panic!("Not yet implemented."),
+            ShapeType::Custom => panic!("Not yet implemented."),
+        })
+    }
+
+    pub fn coHalfspaceNormal(&self, handle: FlatHandle) -> Option<RawVector> {
+        self.map(handle, |co| {
+            co.shape()
+                .as_halfspace()
+                .map(|h| h.normal.into_inner().into())
         })
     }
 
@@ -405,6 +414,7 @@ impl RawColliderSet {
         shape2Rot: &RawRotation,
         shape2Vel: &RawVector,
         maxToi: f32,
+        stop_at_penetration: bool,
     ) -> Option<RawShapeTOI> {
         let pos2 = Isometry::from_parts(shape2Pos.0.into(), shape2Rot.0);
 
@@ -417,6 +427,7 @@ impl RawColliderSet {
                 &pos2,
                 &shape2Vel.0.into(),
                 maxToi,
+                stop_at_penetration,
             )
         })
     }
@@ -428,6 +439,7 @@ impl RawColliderSet {
         collider2handle: FlatHandle,
         collider2Vel: &RawVector,
         max_toi: f32,
+        stop_at_penetration: bool,
     ) -> Option<RawShapeColliderTOI> {
         let handle2 = utils::collider_handle(collider2handle);
         let co2 = self
@@ -444,6 +456,7 @@ impl RawColliderSet {
                 &collider2Vel.0,
                 co2.shape(),
                 max_toi,
+                stop_at_penetration,
             )
             .unwrap_or(None)
             .map_or(None, |toi| {

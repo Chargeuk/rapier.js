@@ -1,6 +1,6 @@
 [package]
 name = "chargeuk_rapier3d" # Can't be named rapier3d which conflicts with the dependency.
-version = "0.9.0"
+version = "0.10.0"
 description = "3-dimensional physics engine in Rust - official JS bindings."
 repository = "https://github.com/Chargeuk/rapier.js"
 readme = "README.md"
@@ -20,7 +20,7 @@ required-features = ["dim3"]
 
 
 [dependencies]
-# rapier3d = { version = "^0.13.0", features = ["wasm-bindgen", "serde-serialize", "enhanced-determinism", "debug-render"] }
+#rapier3d = { version = "^0.15.0", features = ["wasm-bindgen", "serde-serialize", "enhanced-determinism", "debug-render"] }
 rapier3d = { path = "../../../rapier/code/crates/rapier3d", features = ["wasm-bindgen", "serde-serialize", "simd-stable", "debug-render"] }
 ref-cast = "1"
 wasm-bindgen = "^0.2.82"
@@ -45,7 +45,7 @@ opt-level = 3
 
 [package.metadata.wasm-pack.profile.release]
 # add -g to keep debug symbols
-wasm-opt = ['-O4']
+wasm-opt = ['-O4', '--dce']
 
 [package.metadata.wasm-pack.profile.release.wasm-bindgen]
 debug-js-glue = false
