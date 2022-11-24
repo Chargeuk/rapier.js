@@ -1,36 +1,13 @@
-const {base64} = require("rollup-plugin-base64");
-import {terser} from "rollup-plugin-terser";
-import {nodeResolve} from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import typescript from "rollup-plugin-typescript2";
-import filesize from "rollup-plugin-filesize";
-import copy from "rollup-plugin-copy";
+import {nodeResolve} from "@rollup/plugin-node-resolve";
+import typescript from "@rollup/plugin-typescript";
+import terser from "@rollup/plugin-terser";
 import path from "path";
+import {base64} from "rollup-plugin-base64";
+import copy from "rollup-plugin-copy";
+import filesize from "rollup-plugin-filesize";
 
-const config = (dim) => {
-    const includedPaths = [
-        `./gen${dim}/**/*.ts`,
-        `gen${dim}/**/*.ts`,
-        path.resolve(__dirname, `gen${dim}/**/*.ts`),
-      `./gen${dim}/*.ts`,
-      `gen${dim}/*.ts`,
-      path.resolve(__dirname, `gen${dim}/*.ts`),
-      `./src${dim}/*`,
-      `src${dim}/*`,
-      path.resolve(__dirname, `src${dim}/*`)
-    ];
-
-    const numberOfPaths = includedPaths.length;
-    for (let pathCount = 0; pathCount < numberOfPaths; pathCount += 1) {
-        const currentpath = includedPaths[pathCount];
-        const newPath = currentpath.replace(/\\/g, "/");
-        includedPaths.push(newPath);
-    }
-
-      console.log(`dim=${dim} __dirname=${__dirname}`);
-      console.log(`includedPaths=${includedPaths}`);
-
-    return {
+const config = (dim) => ({
     input: `./gen${dim}/rapier.ts`,
     output: [
         {
@@ -54,7 +31,7 @@ const config = (dim) => {
                     dest: `./pkg${dim}/`,
                     transform(content) {
                         let config = JSON.parse(content.toString());
-                        config.name = `@chargeuk/rapier${dim}-compat`;
+                        config.name = `@dimforge/rapier${dim}-compat`;
                         config.description +=
                             " Compatibility package with inlined webassembly as base64.";
                         config.types = "rapier.d.ts";
@@ -81,13 +58,11 @@ const config = (dim) => {
         commonjs(),
         typescript({
             tsconfig: path.resolve(__dirname, `tsconfig.pkg${dim}.json`),
-            include: includedPaths,
             sourceMap: true,
             inlineSources: true,
         }),
         filesize(),
     ],
-}
-};
+});
 
 export default [config("2d"), config("3d")];
