@@ -541,7 +541,7 @@ checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
 
 [[package]]
 name = "rapier2d"
-version = "0.16.0"
+version = "0.16.1"
 dependencies = [
  "approx",
  "arrayvec",
@@ -562,8 +562,7 @@ dependencies = [
 
 [[package]]
 name = "rapier3d"
-version = "0.16.0"
-
+version = "0.16.1"
 dependencies = [
  "approx",
  "arrayvec",
