@@ -26,10 +26,26 @@ use rapier::dynamics::CoefficientCombineRule;
 use rapier::geometry::InteractionGroups;
 use rapier::prelude::Group;
 
-pub const fn unpack_interaction_groups(memberships_filter: u32) -> InteractionGroups {
+pub const fn unpack_interaction_groups(memberships_filter: u32,
+    belongs_to_with_grouping: u32,
+    collides_with_with_grouping: u32,
+    belongs_to_grouping: u32) -> InteractionGroups {
     InteractionGroups::new(
         unsafe { Group::from_bits_unchecked((memberships_filter >> 16) as u32) },
         unsafe { Group::from_bits_unchecked((memberships_filter & 0x0000_ffff) as u32) },
+        belongs_to_with_grouping,
+        collides_with_with_grouping,
+        belongs_to_grouping,
+    )
+}
+
+pub const fn unpack_basic_interaction_groups(memberships_filter: u32) -> InteractionGroups {
+    InteractionGroups::new(
+        unsafe { Group::from_bits_unchecked((memberships_filter >> 16) as u32) },
+        unsafe { Group::from_bits_unchecked((memberships_filter & 0x0000_ffff) as u32) },
+        u32::MAX,
+        u32::MAX,
+        u32::MAX,
     )
 }
 

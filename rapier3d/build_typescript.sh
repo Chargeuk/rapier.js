@@ -1,3 +1,8 @@
+#! /bin/sh
+
+# note: before running this file, node_modules must added to the
+# root of the repository by running yarn
+
 mkdir -p ./pkg/src
 cp -r ../src.ts/* pkg/src/.
 rm -f ./pkg/raw.ts

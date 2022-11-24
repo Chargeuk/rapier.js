@@ -58,6 +58,9 @@ impl RawColliderSet {
         restitutionCombineRule: u32,
         isSensor: bool,
         collisionGroups: u32,
+        belongsToWithGrouping: u32,
+        collidesWithWithGrouping: u32,
+        belongsToGrouping: u32,
         solverGroups: u32,
         activeCollisionTypes: u16,
         activeHooks: u32,
@@ -72,8 +75,8 @@ impl RawColliderSet {
             .position(pos)
             .friction(friction)
             .restitution(restitution)
-            .collision_groups(super::unpack_interaction_groups(collisionGroups))
-            .solver_groups(super::unpack_interaction_groups(solverGroups))
+            .collision_groups(super::unpack_interaction_groups(collisionGroups, belongsToWithGrouping, collidesWithWithGrouping, belongsToGrouping))
+            .solver_groups(super::unpack_basic_interaction_groups(solverGroups))
             .active_hooks(ActiveHooks::from_bits(activeHooks).unwrap_or(ActiveHooks::empty()))
             .active_events(ActiveEvents::from_bits(activeEvents).unwrap_or(ActiveEvents::empty()))
             .active_collision_types(
@@ -149,6 +152,9 @@ impl RawColliderSet {
         restitutionCombineRule: u32,
         isSensor: bool,
         collisionGroups: u32,
+        belongsToWithGrouping: u32,
+        collidesWithWithGrouping: u32,
+        belongsToGrouping: u32,
         solverGroups: u32,
         activeCollisionTypes: u16,
         activeHooks: u32,
@@ -173,6 +179,9 @@ impl RawColliderSet {
             restitutionCombineRule,
             isSensor,
             collisionGroups,
+            belongsToWithGrouping,
+            collidesWithWithGrouping,
+            belongsToGrouping,
             solverGroups,
             activeCollisionTypes,
             activeHooks,
@@ -202,6 +211,9 @@ impl RawColliderSet {
         restitutionCombineRule: u32,
         isSensor: bool,
         collisionGroups: u32,
+        belongsToWithGrouping: u32,
+        collidesWithWithGrouping: u32,
+        belongsToGrouping: u32,
         solverGroups: u32,
         activeCollisionTypes: u16,
         activeHooks: u32,
@@ -227,6 +239,9 @@ impl RawColliderSet {
             restitutionCombineRule,
             isSensor,
             collisionGroups,
+            belongsToWithGrouping,
+            collidesWithWithGrouping,
+            belongsToGrouping,
             solverGroups,
             activeCollisionTypes,
             activeHooks,

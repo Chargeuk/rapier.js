@@ -48,7 +48,7 @@ impl RawQueryPipeline {
             let query_filter = QueryFilter {
                 flags: QueryFilterFlags::from_bits(filter_flags)
                     .unwrap_or(QueryFilterFlags::empty()),
-                groups: filter_groups.map(crate::geometry::unpack_interaction_groups),
+                groups: filter_groups.map(crate::geometry::unpack_basic_interaction_groups),
                 exclude_collider: filter_exclude_collider.map(crate::utils::collider_handle),
                 exclude_rigid_body: filter_exclude_rigid_body.map(crate::utils::body_handle),
                 predicate,
@@ -80,7 +80,7 @@ impl RawQueryPipeline {
             let query_filter = QueryFilter {
                 flags: QueryFilterFlags::from_bits(filter_flags)
                     .unwrap_or(QueryFilterFlags::empty()),
-                groups: filter_groups.map(crate::geometry::unpack_interaction_groups),
+                groups: filter_groups.map(crate::geometry::unpack_basic_interaction_groups),
                 exclude_collider: filter_exclude_collider.map(crate::utils::collider_handle),
                 exclude_rigid_body: filter_exclude_rigid_body.map(crate::utils::body_handle),
                 predicate,
@@ -120,7 +120,7 @@ impl RawQueryPipeline {
             let query_filter = QueryFilter {
                 flags: QueryFilterFlags::from_bits(filter_flags)
                     .unwrap_or(QueryFilterFlags::empty()),
-                groups: filter_groups.map(crate::geometry::unpack_interaction_groups),
+                groups: filter_groups.map(crate::geometry::unpack_basic_interaction_groups),
                 exclude_collider: filter_exclude_collider.map(crate::utils::collider_handle),
                 exclude_rigid_body: filter_exclude_rigid_body.map(crate::utils::body_handle),
                 predicate,
@@ -164,7 +164,7 @@ impl RawQueryPipeline {
             let query_filter = QueryFilter {
                 flags: QueryFilterFlags::from_bits(filter_flags)
                     .unwrap_or(QueryFilterFlags::empty()),
-                groups: filter_groups.map(crate::geometry::unpack_interaction_groups),
+                groups: filter_groups.map(crate::geometry::unpack_basic_interaction_groups),
                 exclude_collider: filter_exclude_collider.map(crate::utils::collider_handle),
                 exclude_rigid_body: filter_exclude_rigid_body.map(crate::utils::body_handle),
                 predicate,
@@ -193,7 +193,7 @@ impl RawQueryPipeline {
             let query_filter = QueryFilter {
                 flags: QueryFilterFlags::from_bits(filter_flags)
                     .unwrap_or(QueryFilterFlags::empty()),
-                groups: filter_groups.map(crate::geometry::unpack_interaction_groups),
+                groups: filter_groups.map(crate::geometry::unpack_basic_interaction_groups),
                 exclude_collider: filter_exclude_collider.map(crate::utils::collider_handle),
                 exclude_rigid_body: filter_exclude_rigid_body.map(crate::utils::body_handle),
                 predicate,
@@ -230,7 +230,7 @@ impl RawQueryPipeline {
             let query_filter = QueryFilter {
                 flags: QueryFilterFlags::from_bits(filter_flags)
                     .unwrap_or(QueryFilterFlags::empty()),
-                groups: filter_groups.map(crate::geometry::unpack_interaction_groups),
+                groups: filter_groups.map(crate::geometry::unpack_basic_interaction_groups),
                 exclude_collider: filter_exclude_collider.map(crate::utils::collider_handle),
                 exclude_rigid_body: filter_exclude_rigid_body.map(crate::utils::body_handle),
                 predicate,
@@ -268,7 +268,7 @@ impl RawQueryPipeline {
             let query_filter = QueryFilter {
                 flags: QueryFilterFlags::from_bits(filter_flags)
                     .unwrap_or(QueryFilterFlags::empty()),
-                groups: filter_groups.map(crate::geometry::unpack_interaction_groups),
+                groups: filter_groups.map(crate::geometry::unpack_basic_interaction_groups),
                 exclude_collider: filter_exclude_collider.map(crate::utils::collider_handle),
                 exclude_rigid_body: filter_exclude_rigid_body.map(crate::utils::body_handle),
                 predicate,
@@ -311,7 +311,7 @@ impl RawQueryPipeline {
             let query_filter = QueryFilter {
                 flags: QueryFilterFlags::from_bits(filter_flags)
                     .unwrap_or(QueryFilterFlags::empty()),
-                groups: filter_groups.map(crate::geometry::unpack_interaction_groups),
+                groups: filter_groups.map(crate::geometry::unpack_basic_interaction_groups),
                 exclude_collider: filter_exclude_collider.map(crate::utils::collider_handle),
                 exclude_rigid_body: filter_exclude_rigid_body.map(crate::utils::body_handle),
                 predicate,
@@ -352,7 +352,7 @@ impl RawQueryPipeline {
             let query_filter = QueryFilter {
                 flags: QueryFilterFlags::from_bits(filter_flags)
                     .unwrap_or(QueryFilterFlags::empty()),
-                groups: filter_groups.map(crate::geometry::unpack_interaction_groups),
+                groups: filter_groups.map(crate::geometry::unpack_basic_interaction_groups),
                 exclude_collider: filter_exclude_collider.map(crate::utils::collider_handle),
                 exclude_rigid_body: filter_exclude_rigid_body.map(crate::utils::body_handle),
                 predicate,

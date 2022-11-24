@@ -75,6 +75,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
+name = "chargeuk_rapier3d"
+version = "0.10.0"
+dependencies = [
+ "bincode",
+ "crossbeam-channel 0.4.4",
+ "js-sys",
+ "nalgebra",
+ "palette",
+ "rapier3d",
+ "ref-cast",
+ "serde",
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "crossbeam"
 version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -173,21 +188,6 @@ dependencies = [
  "nalgebra",
  "palette",
  "rapier2d",
- "ref-cast",
- "serde",
- "wasm-bindgen",
-]
-
-[[package]]
-name = "dimforge_rapier3d"
-version = "0.10.0"
-dependencies = [
- "bincode",
- "crossbeam-channel 0.4.4",
- "js-sys",
- "nalgebra",
- "palette",
- "rapier3d",
  "ref-cast",
  "serde",
  "wasm-bindgen",
@@ -447,7 +447,6 @@ dependencies = [
  "bitflags",
  "downcast-rs",
  "either",
- "indexmap",
  "nalgebra",
  "num-derive",
  "num-traits",
@@ -542,9 +541,7 @@ checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
 
 [[package]]
 name = "rapier2d"
-version = "0.16.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "12435d8c8ea7eee77be71f90e87fea038e9630baf89008e4602f68fe39fcac06"
+version = "0.16.1"
 dependencies = [
  "approx",
  "arrayvec",
@@ -565,9 +562,7 @@ dependencies = [
 
 [[package]]
 name = "rapier3d"
-version = "0.16.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bfab9e1384b38fccb76f2c4d799b94e8214fa1913e657e4645efbce5ba88bd02"
+version = "0.16.1"
 dependencies = [
  "approx",
  "arrayvec",
@@ -583,6 +578,7 @@ dependencies = [
  "rustc-hash",
  "serde",
  "simba",
+ "vec_map",
 ]
 
 [[package]]
@@ -736,6 +732,12 @@ name = "unicode-ident"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dcc811dc4066ac62f84f11307873c4850cb653bfa9b1719cee2bd2204a4bc5dd"
+
+[[package]]
+name = "vec_map"
+version = "0.8.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f1bddf1187be692e79c5ffeab891132dfb0f236ed36a43c7ed39f1165ee20191"
 
 [[package]]
 name = "wasm-bindgen"

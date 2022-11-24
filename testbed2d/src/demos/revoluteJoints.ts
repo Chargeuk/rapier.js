@@ -33,7 +33,7 @@ export function initWorld(RAPIER: RAPIER_API, testbed: Testbed) {
                 let parent = bodies[bodies.length - 1];
                 let anchor1 = new RAPIER.Vector2(0.0, 0.0);
                 let anchor2 = new RAPIER.Vector2(0.0, shift);
-                let JointData = RAPIER.JointData.revolute(anchor1, anchor2);
+                let JointData = RAPIER.JointData.revolute(anchor1, anchor2, false, 0.0, 0.0);
                 world.createImpulseJoint(JointData, parent, child, true);
             }
 
@@ -43,7 +43,7 @@ export function initWorld(RAPIER: RAPIER_API, testbed: Testbed) {
                 let parent = bodies[parentIndex];
                 let anchor1 = new RAPIER.Vector2(0.0, 0.0);
                 let anchor2 = new RAPIER.Vector2(-shift, 0.0);
-                let JointData = RAPIER.JointData.revolute(anchor1, anchor2);
+                let JointData = RAPIER.JointData.revolute(anchor1, anchor2, false, 0.0, 0.0);
                 world.createImpulseJoint(JointData, parent, child, true);
             }
 
