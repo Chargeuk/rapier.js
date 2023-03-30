@@ -1,5 +1,7 @@
 use crate::dynamics::{RawRigidBodySet, RawRigidBodyType};
 use crate::geometry::RawColliderSet;
+#[cfg(feature = "dim3")]
+use crate::math::RawSdpMatrix3;
 use crate::math::{RawRotation, RawVector};
 use crate::utils::{self, FlatHandle};
 use rapier::dynamics::MassProperties;
@@ -361,6 +363,120 @@ impl RawRigidBodySet {
         self.map(handle, |rb| rb.mass())
     }
 
+    /// The inverse of the mass of a rigid-body.
+    ///
+    /// If this is zero, the rigid-body is assumed to have infinite mass.
+    pub fn rbInvMass(&self, handle: FlatHandle) -> f32 {
+        self.map(handle, |rb| rb.mass_properties().local_mprops.inv_mass)
+    }
+
+    /// The inverse mass taking into account translation locking.
+    pub fn rbEffectiveInvMass(&self, handle: FlatHandle) -> RawVector {
+        self.map(handle, |rb| rb.mass_properties().effective_inv_mass.into())
+    }
+
+    /// The center of mass of a rigid-body expressed in its local-space.
+    pub fn rbLocalCom(&self, handle: FlatHandle) -> RawVector {
+        self.map(handle, |rb| {
+            rb.mass_properties().local_mprops.local_com.into()
+        })
+    }
+
+    /// The world-space center of mass of the rigid-body.
+    pub fn rbWorldCom(&self, handle: FlatHandle) -> RawVector {
+        self.map(handle, |rb| rb.mass_properties().world_com.into())
+    }
+
+    /// The inverse of the principal angular inertia of the rigid-body.
+    ///
+    /// Components set to zero are assumed to be infinite along the corresponding principal axis.
+    #[cfg(feature = "dim2")]
+    pub fn rbInvPrincipalInertiaSqrt(&self, handle: FlatHandle) -> f32 {
+        self.map(handle, |rb| {
+            rb.mass_properties()
+                .local_mprops
+                .inv_principal_inertia_sqrt
+                .into()
+        })
+    }
+
+    /// The inverse of the principal angular inertia of the rigid-body.
+    ///
+    /// Components set to zero are assumed to be infinite along the corresponding principal axis.
+    #[cfg(feature = "dim3")]
+    pub fn rbInvPrincipalInertiaSqrt(&self, handle: FlatHandle) -> RawVector {
+        self.map(handle, |rb| {
+            rb.mass_properties()
+                .local_mprops
+                .inv_principal_inertia_sqrt
+                .into()
+        })
+    }
+
+    #[cfg(feature = "dim3")]
+    /// The principal vectors of the local angular inertia tensor of the rigid-body.
+    pub fn rbPrincipalInertiaLocalFrame(&self, handle: FlatHandle) -> RawRotation {
+        self.map(handle, |rb| {
+            RawRotation::from(
+                rb.mass_properties()
+                    .local_mprops
+                    .principal_inertia_local_frame,
+            )
+        })
+    }
+
+    /// The angular inertia along the principal inertia axes of the rigid-body.
+    #[cfg(feature = "dim2")]
+    pub fn rbPrincipalInertia(&self, handle: FlatHandle) -> f32 {
+        self.map(handle, |rb| {
+            rb.mass_properties().local_mprops.principal_inertia().into()
+        })
+    }
+
+    /// The angular inertia along the principal inertia axes of the rigid-body.
+    #[cfg(feature = "dim3")]
+    pub fn rbPrincipalInertia(&self, handle: FlatHandle) -> RawVector {
+        self.map(handle, |rb| {
+            rb.mass_properties().local_mprops.principal_inertia().into()
+        })
+    }
+
+    /// The square-root of the world-space inverse angular inertia tensor of the rigid-body,
+    /// taking into account rotation locking.
+    #[cfg(feature = "dim2")]
+    pub fn rbEffectiveWorldInvInertiaSqrt(&self, handle: FlatHandle) -> f32 {
+        self.map(handle, |rb| {
+            rb.mass_properties().effective_world_inv_inertia_sqrt.into()
+        })
+    }
+
+    /// The square-root of the world-space inverse angular inertia tensor of the rigid-body,
+    /// taking into account rotation locking.
+    #[cfg(feature = "dim3")]
+    pub fn rbEffectiveWorldInvInertiaSqrt(&self, handle: FlatHandle) -> RawSdpMatrix3 {
+        self.map(handle, |rb| {
+            rb.mass_properties().effective_world_inv_inertia_sqrt.into()
+        })
+    }
+
+    /// The effective world-space angular inertia (that takes the potential rotation locking into account) of
+    /// this rigid-body.
+    #[cfg(feature = "dim2")]
+    pub fn rbEffectiveAngularInertia(&self, handle: FlatHandle) -> f32 {
+        self.map(handle, |rb| {
+            rb.mass_properties().effective_angular_inertia().into()
+        })
+    }
+
+    /// The effective world-space angular inertia (that takes the potential rotation locking into account) of
+    /// this rigid-body.
+    #[cfg(feature = "dim3")]
+    pub fn rbEffectiveAngularInertia(&self, handle: FlatHandle) -> RawSdpMatrix3 {
+        self.map(handle, |rb| {
+            rb.mass_properties().effective_angular_inertia().into()
+        })
+    }
+
     /// Wakes this rigid-body up.
     ///
     /// A dynamic rigid-body that does not move during several consecutive frames will
@@ -397,8 +513,8 @@ impl RawRigidBodySet {
     }
 
     /// Set a new status for this rigid-body: fixed, dynamic, or kinematic.
-    pub fn rbSetBodyType(&mut self, handle: FlatHandle, status: RawRigidBodyType) {
-        self.map_mut(handle, |rb| rb.set_body_type(status.into()));
+    pub fn rbSetBodyType(&mut self, handle: FlatHandle, status: RawRigidBodyType, wake_up: bool) {
+        self.map_mut(handle, |rb| rb.set_body_type(status.into(), wake_up));
     }
 
     /// Is this rigid-body fixed?
@@ -432,6 +548,14 @@ impl RawRigidBodySet {
 
     pub fn rbSetAngularDamping(&mut self, handle: FlatHandle, factor: f32) {
         self.map_mut(handle, |rb| rb.set_angular_damping(factor));
+    }
+
+    pub fn rbSetEnabled(&mut self, handle: FlatHandle, enabled: bool) {
+        self.map_mut(handle, |rb| rb.set_enabled(enabled))
+    }
+
+    pub fn rbIsEnabled(&self, handle: FlatHandle) -> bool {
+        self.map(handle, |rb| rb.is_enabled())
     }
 
     pub fn rbGravityScale(&self, handle: FlatHandle) -> f32 {

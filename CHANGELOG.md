@@ -1,3 +1,47 @@
+### 0.11.2
+
+#### Fixed
+
+-   Fix bug that made dynamic rigid-bodies behave like kinematic bodies after being disabled and then re-enabled.
+-   Fix issue with convex polyhedron jitter due to missing contacts.
+-   Fix character controller getting stuck against vertical walls.
+-   Fix character controller’s snapping to ground not triggering sometimes.
+-   Fix character controller’s horizontal offset being mostly ignored and some instances of vertical offset being ignored.
+
+#### Added
+
+-   Add access to the mass-properties of a rigid-body: `RigidBody.effectiveInvMass`, `.invMass()`, `.localCom()`,
+    `.worldCom()`, `.invPrincipalInertiaSqrt()`, `.principalInertia()`, `.principalInertiaLocalFrame()`,
+    `.effectiveWorldInvInertiaSqrt()`, `.effectiveAngularInertia()`.
+
+### 0.11.1 (2023-01-16)
+
+#### Fixed
+
+-   Fix bug that disabled all colliders at construction time.
+
+### 0.11.0 (2023-01-15)
+
+#### Added
+
+-   Add `World.propagateModifiedBodyPositionsToColliders` to propagate rigid-bodies position changes to their attached
+    colliders.
+-   Add `World.updateSceneQueries` to update the scene queries data structures without stepping the whole simulation.
+-   Add `RigidBody.isEnabled, RigidBody.setEnabled, RigidBodyDesc.setEnabled` to disable a rigid-body (and all its
+    attached colliders) without removing it from the physics world.
+-   Add `Collider.isEnabled, Collider.setEnabled, ColliderDesc.setEnabled` to disable a collider without removing it
+    from the physics world.
+-   Add shape-specific methods to modify a collider’s size: `Collider.setRadius, setHalfExtents, setRoundRadius, setHalfHeight`.
+
+#### Modified
+
+-   Add a boolean argument to `RigidBody.setBodyType` to indicate if the rigid-body should awaken after changing
+    its type.
+
+#### Fixed
+
+-   Fix rigid-bodies automatically waking up at creation even if they were explicitly created sleeping.
+
 ### 0.10.0 (2022-11-06)
 
 #### Added
@@ -22,9 +66,6 @@
     before the filter-related arguments. Set this argument to `true` to get the same result as before. If this is set to
     `false` and the shape being cast starts it path already intersecting another shape, then a hit won’t be returned
     with that intersecting shape unless the casting movement would result in more penetrations.
-
-#### Modified
-
 -   Reduce rounding errors in 3D when setting the rotation of a rigid-body or collider.
 
 #### Fixed
