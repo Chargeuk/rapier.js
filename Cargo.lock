@@ -70,10 +70,10 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "chargeuk_rapier3d"
-version = "0.10.0"
+version = "0.11.2"
 dependencies = [
  "bincode",
- "crossbeam-channel 0.4.4",
+ "crossbeam-channel",
  "js-sys",
  "nalgebra",
  "palette",
@@ -503,7 +503,6 @@ checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
 [[package]]
 name = "rapier2d"
 version = "0.17.2"
-
 dependencies = [
  "approx",
  "arrayvec",
@@ -525,7 +524,6 @@ dependencies = [
 [[package]]
 name = "rapier3d"
 version = "0.17.2"
-
 dependencies = [
  "approx",
  "arrayvec",
