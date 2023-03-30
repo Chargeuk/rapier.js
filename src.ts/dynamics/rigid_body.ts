@@ -1,6 +1,9 @@
 import {RawRigidBodySet} from "../raw";
 import {Rotation, RotationOps, Vector, VectorOps} from "../math";
-import {Collider, ColliderHandle, ColliderSet} from "../geometry";
+// #if DIM3
+import {SdpMatrix3, SdpMatrix3Ops} from "../math";
+// #endif
+import {Collider, ColliderSet} from "../geometry";
 
 /**
  * The integer identifier of a collider added to a `ColliderSet`.
@@ -299,7 +302,7 @@ export class RigidBody {
     }
 
     /**
-     * Sets the linear velocity fo this rigid-body.
+     * Sets the linear velocity of this rigid-body.
      *
      * @param vel - The linear velocity to set.
      * @param wakeUp - Forces the rigid-body to wake-up if it was asleep.
@@ -486,6 +489,133 @@ export class RigidBody {
     }
 
     /**
+     * The inverse mass taking into account translation locking.
+     */
+    public effectiveInvMass(): Vector {
+        return VectorOps.fromRaw(this.rawSet.rbEffectiveInvMass(this.handle));
+    }
+
+    /**
+     * The inverse of the mass of a rigid-body.
+     *
+     * If this is zero, the rigid-body is assumed to have infinite mass.
+     */
+    public invMass(): number {
+        return this.rawSet.rbInvMass(this.handle);
+    }
+
+    /**
+     * The center of mass of a rigid-body expressed in its local-space.
+     */
+    public localCom(): Vector {
+        return VectorOps.fromRaw(this.rawSet.rbLocalCom(this.handle));
+    }
+
+    /**
+     * The world-space center of mass of the rigid-body.
+     */
+    public worldCom(): Vector {
+        return VectorOps.fromRaw(this.rawSet.rbWorldCom(this.handle));
+    }
+
+    // #if DIM2
+    /**
+     * The inverse of the principal angular inertia of the rigid-body.
+     *
+     * Components set to zero are assumed to be infinite along the corresponding principal axis.
+     */
+    public invPrincipalInertiaSqrt(): number {
+        return this.rawSet.rbInvPrincipalInertiaSqrt(this.handle);
+    }
+    // #endif
+
+    // #if DIM3
+    /**
+     * The inverse of the principal angular inertia of the rigid-body.
+     *
+     * Components set to zero are assumed to be infinite along the corresponding principal axis.
+     */
+    public invPrincipalInertiaSqrt(): Vector {
+        return VectorOps.fromRaw(
+            this.rawSet.rbInvPrincipalInertiaSqrt(this.handle),
+        );
+    }
+    // #endif
+
+    // #if DIM2
+    /**
+     * The angular inertia along the principal inertia axes of the rigid-body.
+     */
+    public principalInertia(): number {
+        return this.rawSet.rbPrincipalInertia(this.handle);
+    }
+    // #endif
+
+    // #if DIM3
+    /**
+     * The angular inertia along the principal inertia axes of the rigid-body.
+     */
+    public principalInertia(): Vector {
+        return VectorOps.fromRaw(this.rawSet.rbPrincipalInertia(this.handle));
+    }
+    // #endif
+
+    // #if DIM3
+    /**
+     * The principal vectors of the local angular inertia tensor of the rigid-body.
+     */
+    public principalInertiaLocalFrame(): Rotation {
+        return RotationOps.fromRaw(
+            this.rawSet.rbPrincipalInertiaLocalFrame(this.handle),
+        );
+    }
+    // #endif
+
+    // #if DIM2
+    /**
+     * The square-root of the world-space inverse angular inertia tensor of the rigid-body,
+     * taking into account rotation locking.
+     */
+    public effectiveWorldInvInertiaSqrt(): number {
+        return this.rawSet.rbEffectiveWorldInvInertiaSqrt(this.handle);
+    }
+    // #endif
+
+    // #if DIM3
+    /**
+     * The square-root of the world-space inverse angular inertia tensor of the rigid-body,
+     * taking into account rotation locking.
+     */
+    public effectiveWorldInvInertiaSqrt(): SdpMatrix3 {
+        return SdpMatrix3Ops.fromRaw(
+            this.rawSet.rbEffectiveWorldInvInertiaSqrt(this.handle),
+        );
+    }
+    // #endif
+
+    // #if DIM2
+    /**
+     * The effective world-space angular inertia (that takes the potential rotation locking into account) of
+     * this rigid-body.
+     */
+    public effectiveAngularInertia(): number {
+        return this.rawSet.rbEffectiveAngularInertia(this.handle);
+    }
+    // #endif
+
+    // #if DIM3
+    /**
+     * The effective world-space angular inertia (that takes the potential rotation locking into account) of
+     * this rigid-body.
+     */
+    public effectiveAngularInertia(): SdpMatrix3 {
+        return SdpMatrix3Ops.fromRaw(
+            this.rawSet.rbEffectiveAngularInertia(this.handle),
+        );
+    }
+    // #endif
+
+    /**
      * Put this rigid body to sleep.
      *
      * A sleeping body no longer moves and is no longer simulated by the physics engine unless
@@ -534,6 +664,22 @@ export class RigidBody {
     }
 
     /**
+     * Sets whether this rigid-body is enabled or not.
+     *
+     * @param enabled - Set to `false` to disable this rigid-body and all its attached colliders.
+     */
+    public setEnabled(enabled: boolean) {
+        this.rawSet.rbSetEnabled(this.handle, enabled);
+    }
+
+    /**
+     * Is this rigid-body enabled?
+     */
+    public isEnabled(): boolean {
+        return this.rawSet.rbIsEnabled(this.handle);
+    }
+
+    /**
      * The status of this rigid-body: static, dynamic, or kinematic.
      */
     public bodyType(): RigidBodyType {
@@ -543,8 +689,8 @@ export class RigidBody {
     /**
      * Set a new status for this rigid-body: static, dynamic, or kinematic.
      */
-    public setBodyType(type: RigidBodyType) {
-        return this.rawSet.rbSetBodyType(this.handle, type);
+    public setBodyType(type: RigidBodyType, wakeUp: boolean) {
+        return this.rawSet.rbSetBodyType(this.handle, type, wakeUp);
     }
 
     /**
@@ -864,6 +1010,7 @@ export class RigidBody {
 }
 
 export class RigidBodyDesc {
+    enabled: boolean;
     translation: Vector;
     rotation: Rotation;
     gravityScale: number;
@@ -897,6 +1044,7 @@ export class RigidBodyDesc {
     userData?: unknown;
 
     constructor(status: RigidBodyType) {
+        this.enabled = true;
         this.status = status;
         this.translation = VectorOps.zeros();
         this.rotation = RotationOps.identity();
@@ -995,6 +1143,15 @@ export class RigidBodyDesc {
 
     public setDominanceGroup(group: number): RigidBodyDesc {
         this.dominanceGroup = group;
+        return this;
+    }
+
+    /**
+     * Sets whether the created rigid-body will be enabled or disabled.
+     * @param enabled − If set to `false` the rigid-body will be disabled at creation.
+     */
+    public setEnabled(enabled: boolean): RigidBodyDesc {
+        this.enabled = enabled;
         return this;
     }
 

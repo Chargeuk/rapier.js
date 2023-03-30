@@ -4,14 +4,25 @@ import {Collider, ColliderSet, InteractionGroups, Shape} from "../geometry";
 import {QueryFilterFlags, QueryPipeline, World} from "../pipeline";
 import {IntegrationParameters, RigidBody, RigidBodySet} from "../dynamics";
 
+/**
+ * A collision between the character and an obstacle hit on its path.
+ */
 export class CharacterCollision {
-    public collider: Collider;
-    public translationApplied: Vector;
-    public translationRemaining: Vector;
+    /** The collider involved in the collision. Null if the collider no longer exists in the physics world. */
+    public collider: Collider | null;
+    /** The translation delta applied to the character before this collision took place. */
+    public translationDeltaApplied: Vector;
+    /** The translation delta the character would move after this collision if there is no other obstacles. */
+    public translationDeltaRemaining: Vector;
+    /** The time-of-impact between the character and the obstacles. */
     public toi: number;
+    /** The world-space contact point on the collider when the collision happens. */
     public witness1: Vector;
+    /** The local-space contact point on the character when the collision happens. */
     public witness2: Vector;
+    /** The world-space outward contact normal on the collider when the collision happens. */
     public normal1: Vector;
+    /** The local-space outward contact normal on the character when the collision happens. */
     public normal2: Vector;
 }
 
@@ -220,8 +231,8 @@ export class KinematicCharacterController {
     }
 
     /**
-     * Should the character be automatically snapped to the ground if the distance between
-     * the ground and its feed are smaller than the specified threshold?
+     * If snap-to-ground is enabled, should the character be automatically snapped to the ground if
+     * the distance between the ground and its feet are smaller than the specified threshold?
      */
     public snapToGroundDistance(): number | null {
         return this.raw.snapToGroundDistance();
@@ -229,7 +240,7 @@ export class KinematicCharacterController {
 
     /**
      * Enables automatically snapping the character to the ground if the distance between
-     * the ground and its feed are smaller than the specified threshold.
+     * the ground and its feet are smaller than the specified threshold.
      */
     public enableSnapToGround(distance: number) {
         this.raw.enableSnapToGround(distance);
@@ -253,7 +264,7 @@ export class KinematicCharacterController {
      * Computes the movement the given collider is able to execute after hitting and sliding on obstacles.
      *
      * @param collider - The collider to move.
-     * @param desiredTranslation - The desired collider movement.
+     * @param desiredTranslationDelta - The desired collider movement.
      * @param filterFlags - Flags for excluding whole subsets of colliders from the obstacles taken into account.
      * @param filterGroups - Groups for excluding colliders with incompatible collision groups from the obstacles
      *                       taken into account.
@@ -262,26 +273,26 @@ export class KinematicCharacterController {
      */
     public computeColliderMovement(
         collider: Collider,
-        desiredTranslation: Vector,
+        desiredTranslationDelta: Vector,
         filterFlags?: QueryFilterFlags,
         filterGroups?: InteractionGroups,
         filterPredicate?: (collider: Collider) => boolean,
     ) {
-        let rawTranslation = VectorOps.intoRaw(desiredTranslation);
+        let rawTranslationDelta = VectorOps.intoRaw(desiredTranslationDelta);
         this.raw.computeColliderMovement(
             this.params.dt,
             this.bodies.raw,
             this.colliders.raw,
             this.queries.raw,
             collider.handle,
-            rawTranslation,
+            rawTranslationDelta,
             this._applyImpulsesToDynamicBodies,
             this._characterMass,
             filterFlags,
             filterGroups,
             this.colliders.castClosure(filterPredicate),
         );
-        rawTranslation.free();
+        rawTranslationDelta.free();
     }
 
     /**
@@ -322,15 +333,19 @@ export class KinematicCharacterController {
         } else {
             let c = this.rawCharacterCollision;
             out = out ?? new CharacterCollision();
-            out.translationApplied = VectorOps.fromRaw(c.translationApplied());
-            out.translationRemaining = VectorOps.fromRaw(
-                c.translationRemaining(),
+            out.translationDeltaApplied = VectorOps.fromRaw(
+                c.translationDeltaApplied(),
+            );
+            out.translationDeltaRemaining = VectorOps.fromRaw(
+                c.translationDeltaRemaining(),
             );
             out.toi = c.toi();
             out.witness1 = VectorOps.fromRaw(c.worldWitness1());
             out.witness2 = VectorOps.fromRaw(c.worldWitness2());
             out.normal1 = VectorOps.fromRaw(c.worldNormal1());
             out.normal2 = VectorOps.fromRaw(c.worldNormal2());
+            out.collider = this.colliders.get(c.handle());
+            return out;
         }
     }
 }

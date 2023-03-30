@@ -57,6 +57,10 @@ import {DebugRenderBuffers, DebugRenderPipeline} from "./debug_render_pipeline";
 import {KinematicCharacterController} from "../control";
 import {Coarena} from "../coarena";
 
+// #if DIM3
+import {DynamicRayCastVehicleController} from "../control";
+// #endif
+
 /**
  * The physics world.
  *
@@ -80,6 +84,10 @@ export class World {
     debugRenderPipeline: DebugRenderPipeline;
     characterControllers: Set<KinematicCharacterController>;
 
+    // #if DIM3
+    vehicleControllers: Set<DynamicRayCastVehicleController>;
+    // #endif
+
     /**
      * Release the WASM memory occupied by this physics world.
      *
@@ -102,6 +110,10 @@ export class World {
         this.debugRenderPipeline.free();
         this.characterControllers.forEach((controller) => controller.free());
 
+        // #if DIM3
+        this.vehicleControllers.forEach((controller) => controller.free());
+        // #endif
+
         this.integrationParameters = undefined;
         this.islands = undefined;
         this.broadPhase = undefined;
@@ -116,6 +128,10 @@ export class World {
         this.serializationPipeline = undefined;
         this.debugRenderPipeline = undefined;
         this.characterControllers = undefined;
+
+        // #if DIM3
+        this.vehicleControllers = undefined;
+        // #endif
     }
 
     constructor(
@@ -155,6 +171,10 @@ export class World {
             rawDebugRenderPipeline,
         );
         this.characterControllers = new Set<KinematicCharacterController>();
+
+        // #if DIM3
+        this.vehicleControllers = new Set<DynamicRayCastVehicleController>();
+        // #endif
 
         this.impulseJoints.finalizeDeserialization(this.bodies);
         this.bodies.finalizeDeserialization(this.colliders);
@@ -247,7 +267,30 @@ export class World {
             eventQueue,
             hooks,
         );
-        this.queryPipeline.update(this.islands, this.bodies, this.colliders);
+        this.queryPipeline.update(this.bodies, this.colliders);
+    }
+
+    /**
+     * Update colliders positions after rigid-bodies moved.
+     *
+     * When a rigid-body moves, the positions of the colliders attached to it need to be updated. This update is
+     * generally automatically done at the beginning and the end of each simulation step with World.step.
+     * If the positions need to be updated without running a simulation step this method can be called manually.
+     */
+    public propagateModifiedBodyPositionsToColliders() {
+        this.bodies.raw.propagateModifiedBodyPositionsToColliders(
+            this.colliders.raw,
+        );
+    }
+
+    /**
+     * Ensure subsequent scene queries take into account the collider positions set before this method is called.
+     *
+     * This does not step the physics simulation forward.
+     */
+    public updateSceneQueries() {
+        this.propagateModifiedBodyPositionsToColliders();
+        this.queryPipeline.update(this.bodies, this.colliders);
     }
 
     /**
@@ -365,6 +408,40 @@ export class World {
         this.characterControllers.delete(controller);
         controller.free();
     }
+
+    // #if DIM3
+    /**
+     * Creates a new vehicle controller.
+     *
+     * @param chassis - The rigid-body used as the chassis of the vehicle controller. When the vehicle
+     *                  controller is updated, it will change directly the rigid-body’s velocity. This
+     *                  rigid-body must be a dynamic or kinematic-velocity-based rigid-body.
+     */
+    public createVehicleController(
+        chassis: RigidBody,
+    ): DynamicRayCastVehicleController {
+        let controller = new DynamicRayCastVehicleController(
+            chassis,
+            this.bodies,
+            this.colliders,
+            this.queryPipeline,
+        );
+        this.vehicleControllers.add(controller);
+        return controller;
+    }
+
+    /**
+     * Removes a vehicle controller from this world.
+     *
+     * @param controller - The vehicle controller to remove.
+     */
+    public removeVehicleController(
+        controller: DynamicRayCastVehicleController,
+    ) {
+        this.vehicleControllers.delete(controller);
+        controller.free();
+    }
+    // #endif
 
     /**
      * Creates a new collider.
