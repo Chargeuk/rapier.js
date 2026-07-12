@@ -1,3 +1,5 @@
+#[cfg(feature = "dim3")]
+use crate::geometry::shape::normalized_convex_polyhedron_mesh;
 use crate::geometry::shape::SharedShapeUtility;
 use crate::geometry::{
     RawColliderSet, RawColliderShapeCastHit, RawPointProjection, RawRayIntersection, RawShape,
@@ -266,6 +268,10 @@ impl RawColliderSet {
         })
     }
 
+    pub fn coShape(&self, handle: FlatHandle) -> RawShape {
+        self.map(handle, |co| RawShape(co.shared_shape().clone()))
+    }
+
     /// The outward normal of this collider if it has a half-space shape.
     ///
     /// Returns `false` if it doesn’t have a half-space shape.
@@ -391,6 +397,8 @@ impl RawColliderSet {
             }
             #[cfg(feature = "dim3")]
             ShapeType::Cone => co.shape().as_cone().map(|b| b.radius),
+            #[cfg(feature = "dim3")]
+            ShapeType::RoundCone => co.shape().as_round_cone().map(|b| b.inner_shape.radius),
             _ => None,
         })
     }
@@ -415,6 +423,11 @@ impl RawColliderSet {
                 .map(|b| b.inner_shape.radius = newRadius),
             #[cfg(feature = "dim3")]
             ShapeType::Cone => co.shape_mut().as_cone_mut().map(|b| b.radius = newRadius),
+            #[cfg(feature = "dim3")]
+            ShapeType::RoundCone => co
+                .shape_mut()
+                .as_round_cone_mut()
+                .map(|b| b.inner_shape.radius = newRadius),
             _ => None,
         });
     }
@@ -432,6 +445,11 @@ impl RawColliderSet {
                 .map(|b| b.inner_shape.half_height),
             #[cfg(feature = "dim3")]
             ShapeType::Cone => co.shape().as_cone().map(|b| b.half_height),
+            #[cfg(feature = "dim3")]
+            ShapeType::RoundCone => co
+                .shape()
+                .as_round_cone()
+                .map(|b| b.inner_shape.half_height),
             _ => None,
         })
     }
@@ -461,6 +479,11 @@ impl RawColliderSet {
                 .shape_mut()
                 .as_cone_mut()
                 .map(|b| b.half_height = newHalfheight),
+            #[cfg(feature = "dim3")]
+            ShapeType::RoundCone => co
+                .shape_mut()
+                .as_round_cone_mut()
+                .map(|b| b.inner_shape.half_height = newHalfheight),
             _ => None,
         });
     }
@@ -656,6 +679,10 @@ impl RawColliderSet {
     }
 
     /// The vertices of this triangle mesh, polyline, convex polyhedron, segment, triangle or convex polyhedron, if it is one.
+    ///
+    /// For convex polyhedra, this returns the vertices of a convex hull recomputed with
+    /// `try_convex_hull`, so they may differ in count and order from the points the shape
+    /// was built from. This guarantees the result can be used to reconstruct the shape.
     pub fn coVertices(&self, handle: FlatHandle) -> Option<Vec<f32>> {
         let flatten =
             |vertices: &[Point<f32>]| vertices.iter().flat_map(|p| p.iter()).copied().collect();
@@ -667,12 +694,14 @@ impl RawColliderSet {
             ShapeType::ConvexPolyhedron => co
                 .shape()
                 .as_convex_polyhedron()
-                .map(|p| flatten(p.points())),
+                .and_then(normalized_convex_polyhedron_mesh)
+                .map(|(points, _)| flatten(&points)),
             #[cfg(feature = "dim3")]
             ShapeType::RoundConvexPolyhedron => co
                 .shape()
                 .as_round_convex_polyhedron()
-                .map(|p| flatten(p.inner_shape.points())),
+                .and_then(|p| normalized_convex_polyhedron_mesh(&p.inner_shape))
+                .map(|(points, _)| flatten(&points)),
             #[cfg(feature = "dim2")]
             ShapeType::ConvexPolygon => co.shape().as_convex_polygon().map(|p| flatten(p.points())),
             #[cfg(feature = "dim2")]
@@ -691,6 +720,9 @@ impl RawColliderSet {
     }
 
     /// The indices of this triangle mesh, polyline, or convex polyhedron, if it is one.
+    ///
+    /// For convex polyhedra, the indices refer to the convex hull recomputed with
+    /// `try_convex_hull` (matching `coVertices`), not to the original input mesh.
     pub fn coIndices(&self, handle: FlatHandle) -> Option<Vec<u32>> {
         self.map(handle, |co| match co.shape().shape_type() {
             ShapeType::TriMesh => co
@@ -702,26 +734,17 @@ impl RawColliderSet {
                 .as_polyline()
                 .map(|p| p.indices().iter().flat_map(|p| p.iter()).copied().collect()),
             #[cfg(feature = "dim3")]
-            ShapeType::ConvexPolyhedron => co.shape().as_convex_polyhedron().map(|p| {
-                // TODO: avoid the `.to_trimesh()`.
-                p.to_trimesh()
-                    .1
-                    .iter()
-                    .flat_map(|p| p.iter())
-                    .copied()
-                    .collect()
-            }),
+            ShapeType::ConvexPolyhedron => co
+                .shape()
+                .as_convex_polyhedron()
+                .and_then(normalized_convex_polyhedron_mesh)
+                .map(|(_, indices)| indices),
             #[cfg(feature = "dim3")]
-            ShapeType::RoundConvexPolyhedron => co.shape().as_round_convex_polyhedron().map(|p| {
-                // TODO: avoid the `.to_trimesh()`.
-                p.inner_shape
-                    .to_trimesh()
-                    .1
-                    .iter()
-                    .flat_map(|p| p.iter())
-                    .copied()
-                    .collect()
-            }),
+            ShapeType::RoundConvexPolyhedron => co
+                .shape()
+                .as_round_convex_polyhedron()
+                .and_then(|p| normalized_convex_polyhedron_mesh(&p.inner_shape))
+                .map(|(_, indices)| indices),
             _ => None,
         })
     }
